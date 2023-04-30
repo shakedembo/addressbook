@@ -1,6 +1,7 @@
 package com.example.demo.addressbook;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -8,15 +9,19 @@ import java.util.List;
 @Component
 public class AddressBookServiceImpl implements AddressBookService {
 
+    public static final String ALL = "ALL";
     public final AddressBookDAO addressBookDAO;
+    private final KafkaTemplate<String, Contact> producer;
 
     @Autowired
-    public AddressBookServiceImpl(AddressBookDAO addressBookDAO) {
+    public AddressBookServiceImpl(AddressBookDAO addressBookDAO, KafkaTemplate<String, Contact> producer) {
         this.addressBookDAO = addressBookDAO;
+        this.producer = producer;
     }
 
     @Override
     public List<Contact> GetAll() {
+        producer.send("addressbook-producer-topic", null);
         return addressBookDAO.GetAll();
     }
 

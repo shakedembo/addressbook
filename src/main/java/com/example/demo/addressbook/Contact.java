@@ -1,18 +1,25 @@
 package com.example.demo.addressbook;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
 
 @Entity
 public @Data class Contact {
 
+    @JsonProperty
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
+
+    @JsonProperty
     @Column(unique = true)
     private String email;
+
+    @JsonProperty
     private String name;
+
+    @JsonProperty
     private String phoneNumber;
     protected Contact() {}
 
