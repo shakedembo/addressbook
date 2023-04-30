@@ -1,5 +1,8 @@
-package com.example.demo.addressbook;
+package com.example.demo.addressbook.config;
 
+import com.example.demo.addressbook.Contact;
+import com.example.demo.addressbook.ContactSerializer;
+import com.example.demo.addressbook.KafkaMessage;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,12 +20,6 @@ public class KafkaProducerConfig {
     @Value(value = "${spring.kafka.bootstrap-servers}")
     private String kafkaUrl;
 
-//    @Bean
-//    Producer<String, Contact> getProducer() {
-//        var configs = getConfigs();
-//        return new KafkaProducer<>(configs);
-//    }
-
     private HashMap<String, Object> getConfigs() {
         var configs = new HashMap<String, Object>();
         configs.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
@@ -32,12 +29,12 @@ public class KafkaProducerConfig {
     }
 
     @Bean
-    public ProducerFactory<String, Contact> producerFactory() {
+    public ProducerFactory<String, KafkaMessage<Contact>> producerFactory() {
         return new DefaultKafkaProducerFactory<>(getConfigs());
     }
 
     @Bean
-    public KafkaTemplate<String, Contact> kafkaTemplate() {
+    public KafkaTemplate<String, KafkaMessage<Contact>> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 }

@@ -1,4 +1,4 @@
-package com.example.demo.addressbook;
+package com.example.demo.addressbook.config;
 
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.beans.factory.annotation.Value;
