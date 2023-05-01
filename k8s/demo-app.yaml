@@ -18,12 +18,16 @@ spec:
       - name: demo-app
         image: 167370455537.dkr.ecr.us-east-1.amazonaws.com/demo-app:latest
         ports:
-        - containerPort: 8080
+        - containerPort: 4567
         env:
         - name: DATABASE_HOST
           value: postgres
         - name: DATABASE_USER
           value: postgres
+        - name: KAFKA_URL
+          value: localhost:29092
+        - name: KAFKA_TOPIC
+          value: addressbook-producer-topic
       imagePullSecrets:
           - name: regcred
 ---
@@ -36,8 +40,8 @@ spec:
     app: demo-app
   ports:
     - protocol: TCP
-      port: 8080
-      targetPort: 8080
+      port: 4567
+      targetPort: 4567
 
 ---
 apiVersion: networking.k8s.io/v1
@@ -57,5 +61,5 @@ spec:
           service:
             name: demo-app
             port:
-              number: 8080
+              number: 4567
   ingressClassName: nginx
