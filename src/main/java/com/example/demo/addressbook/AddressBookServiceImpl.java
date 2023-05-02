@@ -1,5 +1,6 @@
 package com.example.demo.addressbook;
 
+import com.example.demo.DemoApplication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
@@ -74,7 +75,11 @@ public class AddressBookServiceImpl implements AddressBookService {
         }
         var res = addressBookDAO.CreateOrUpdate(contact);
         producer.send(ADDRESSBOOK_PRODUCER_TOPIC,
-                new KafkaMessage<>(contact, LocalDateTime.now(), "Create", CommandResult.SUCCESS, ""));
+                new KafkaMessage<>(contact, LocalDateTime.now(), "Create", CommandResult.SUCCESS, ""))
+                .whenComplete((sendRes, y) -> {
+            DemoApplication.log.info(String.format("The kafkaSendResult: '%s'", sendRes.toString()));
+        });
+
 
         return res;
     }

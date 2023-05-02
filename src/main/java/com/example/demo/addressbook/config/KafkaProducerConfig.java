@@ -1,7 +1,10 @@
 package com.example.demo.addressbook.config;
 
 import com.example.demo.addressbook.Contact;
+import com.example.demo.addressbook.ContactSerializer;
 import com.example.demo.addressbook.KafkaMessage;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,9 +21,11 @@ public class KafkaProducerConfig {
     private String kafkaUrl;
 
     private HashMap<String, Object> getConfigs() {
-//        configs.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-//        configs.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaUrl);
-        return new HashMap<String, Object>();
+        var configs = new HashMap<String, Object>();
+        configs.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        configs.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, ContactSerializer.class);
+        configs.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaUrl);
+        return configs;
     }
 
     @Bean

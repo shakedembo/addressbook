@@ -2,16 +2,17 @@ package com.example.demo.addressbook;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.apache.kafka.common.serialization.Serializer;
 import org.hibernate.type.SerializationException;
 
 import java.util.Map;
 
-public class ContactSerializer implements Serializer<Contact> {
+public class ContactSerializer implements Serializer<KafkaMessage<Contact>> {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public ContactSerializer() {
-        //Nothing to do
+        objectMapper.registerModule(new JavaTimeModule());
     }
 
     @Override
@@ -20,7 +21,7 @@ public class ContactSerializer implements Serializer<Contact> {
     }
 
     @Override
-    public byte[] serialize(String topic, Contact data) {
+    public byte[] serialize(String s, KafkaMessage<Contact> data) {
         if (data == null) {
             return null;
         }
